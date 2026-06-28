@@ -21,3 +21,10 @@ CipherKeys.xcodeproj/
 # Carthage / CocoaPods (unused, but ignored defensively)
 Carthage/Build/
 Pods/
+
+# fastlane — never commit the App Store Connect API key, and skip generated reports
+*.p8
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/test_output/
+fastlane/README.md

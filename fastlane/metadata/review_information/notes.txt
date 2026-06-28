@@ -1,0 +1,11 @@
+CipherKeys is a custom keyboard plus a "Decode with CipherKeys" share action.
+
+How to test the keyboard:
+1. Settings → General → Keyboard → Keyboards → Add New Keyboard → CipherKeys.
+2. In any text field (e.g. Notes), type some text, tap the 🌐 globe to switch to CipherKeys, then tap Encode (and Decode to reverse).
+
+Notes for review:
+• The keyboard does NOT request Full Access (RequestsOpenAccess = NO) and works fully offline.
+• No data is collected; there is no networking anywhere in the app or extensions.
+• The ciphers are classic, reversible toys (Caesar, ROT13, Atbash, T9) — not encryption; the app makes no security/confidentiality claims.
+• No account or login is required.
