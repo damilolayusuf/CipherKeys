@@ -7,6 +7,9 @@ import XCTest
 /// `snapshot`) in the same target. Generate it once with `fastlane snapshot init`,
 /// move the produced `fastlane/SnapshotHelper.swift` into this `CipherKeysUITests/`
 /// folder, then re-run `xcodegen generate`. See fastlane/SCREENSHOTS.md.
+// @MainActor: fastlane's SnapshotHelper marks setupSnapshot()/snapshot() as
+// main-actor isolated, so the calling test code must be too.
+@MainActor
 final class CipherKeysUITests: XCTestCase {
 
     override func setUpWithError() throws {
