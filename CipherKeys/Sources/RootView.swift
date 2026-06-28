@@ -7,20 +7,38 @@ struct RootView: View {
 
     @State private var importedName: String?
     @State private var showImportAlert = false
+    @State private var selection: AppTab = RootView.initialTab
+
+    private enum AppTab: String { case encode, decode, recipes, setup }
+
+    /// UI tests (fastlane snapshot) preselect a tab via the UITEST_TAB launch
+    /// environment so navigation works identically on iPhone and iPad. In normal
+    /// use this is unset and the app opens on Encode.
+    private static var initialTab: AppTab {
+        if let raw = ProcessInfo.processInfo.environment["UITEST_TAB"],
+           let tab = AppTab(rawValue: raw) {
+            return tab
+        }
+        return .encode
+    }
 
     var body: some View {
-        TabView {
+        TabView(selection: $selection) {
             EncodeView()
                 .tabItem { Label("Encode", systemImage: "lock.fill") }
+                .tag(AppTab.encode)
 
             DecodeView()
                 .tabItem { Label("Decode", systemImage: "lock.open.fill") }
+                .tag(AppTab.decode)
 
             RecipesView()
                 .tabItem { Label("Recipes", systemImage: "wand.and.stars") }
+                .tag(AppTab.recipes)
 
             EnableKeyboardView()
                 .tabItem { Label("Setup", systemImage: "keyboard") }
+                .tag(AppTab.setup)
         }
         .onChange(of: scenePhase) { phase in
             if phase == .active { model.reload() }

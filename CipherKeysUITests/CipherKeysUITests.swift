@@ -1,14 +1,13 @@
 import XCTest
 
-/// UI test that drives CipherKeys through its tabs and captures an App Store
-/// screenshot at each one, via fastlane `snapshot`.
+/// UI test that captures an App Store screenshot of each tab, via fastlane `snapshot`.
 ///
-/// NOTE: this file needs `SnapshotHelper.swift` (which defines `setupSnapshot` and
-/// `snapshot`) in the same target. Generate it once with `fastlane snapshot init`,
-/// move the produced `fastlane/SnapshotHelper.swift` into this `CipherKeysUITests/`
-/// folder, then re-run `xcodegen generate`. See fastlane/SCREENSHOTS.md.
-// @MainActor: fastlane's SnapshotHelper marks setupSnapshot()/snapshot() as
-// main-actor isolated, so the calling test code must be too.
+/// Navigation is done by relaunching the app with the `UITEST_TAB` launch environment
+/// preselecting a tab (handled in RootView), rather than tapping the tab bar — that
+/// keeps capture identical on iPhone and iPad, where TabView lays out differently.
+///
+/// NOTE: needs `SnapshotHelper.swift` (defines `setupSnapshot`/`snapshot`) in this
+/// target — generated once via `fastlane snapshot init`. See fastlane/SCREENSHOTS.md.
 @MainActor
 final class CipherKeysUITests: XCTestCase {
 
@@ -17,25 +16,19 @@ final class CipherKeysUITests: XCTestCase {
     }
 
     func testCaptureScreenshots() {
-        let app = XCUIApplication()
-        setupSnapshot(app)
-        app.launch()
-
-        // Encode tab — with default settings the live preview shows
-        // "hello world" → "khoor zruog".
-        snapshot("01-Encode")
-
-        let tabBar = app.tabBars.firstMatch
-        tap(tabBar, "Decode", then: "02-Decode")
-        tap(tabBar, "Recipes", then: "03-Recipes")
-        tap(tabBar, "Setup", then: "04-Setup")
+        // With default settings, the Encode preview shows "hello world" → "khoor zruog".
+        capture(tab: "encode",  named: "01-Encode")
+        capture(tab: "decode",  named: "02-Decode")
+        capture(tab: "recipes", named: "03-Recipes")
+        capture(tab: "setup",   named: "04-Setup")
     }
 
-    /// Tap a tab by its label (if present) and snapshot it.
-    private func tap(_ tabBar: XCUIElement, _ tabLabel: String, then name: String) {
-        let button = tabBar.buttons[tabLabel]
-        guard button.waitForExistence(timeout: 5) else { return }
-        button.tap()
+    private func capture(tab: String, named name: String) {
+        let app = XCUIApplication()
+        setupSnapshot(app)
+        app.launchEnvironment["UITEST_TAB"] = tab
+        app.launch()
         snapshot(name)
+        app.terminate()
     }
 }
