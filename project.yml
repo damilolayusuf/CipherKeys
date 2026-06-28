@@ -1,0 +1,127 @@
+name: CipherKeys
+
+options:
+  bundleIdPrefix: com.xkabiir
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+# Applied to every target. Set DEVELOPMENT_TEAM to your Apple Developer Team ID
+# before building to a device or distributing — App Groups require a real team.
+# Leaving it blank is fine for building/running in the Simulator.
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: "WGX4YBXH9P"
+    CODE_SIGN_STYLE: Automatic
+    TARGETED_DEVICE_FAMILY: "1,2"
+
+targets:
+
+  # Shared cipher engine. Built as a STATIC framework (MACH_O_TYPE = staticlib) so
+  # the math is compiled directly into both the app and the keyboard extension —
+  # no embedded dylib to load, which is ideal for the memory-constrained keyboard.
+  CipherCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: CipherCore/Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.xkabiir.cipherkeys.CipherCore
+        MACH_O_TYPE: staticlib
+        DEFINES_MODULE: "YES"
+        SKIP_INSTALL: "YES"
+        GENERATE_INFOPLIST_FILE: "YES"
+
+  CipherCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: CipherCore/Tests
+    dependencies:
+      - target: CipherCore
+        embed: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.xkabiir.cipherkeys.CipherCoreTests
+        GENERATE_INFOPLIST_FILE: "YES"
+
+  # Main SwiftUI app.
+  CipherKeys:
+    type: application
+    platform: iOS
+    sources:
+      - path: CipherKeys/Sources
+      - path: CipherKeys/Resources
+    dependencies:
+      - target: CipherCore
+        embed: false
+      - target: CipherKeysKeyboard   # embeds the .appex into the app's PlugIns
+      - target: CipherKeysAction      # embeds the Decode action extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.xkabiir.cipherkeys
+        INFOPLIST_FILE: CipherKeys/Info.plist
+        CODE_SIGN_ENTITLEMENTS: CipherKeys/CipherKeys.entitlements
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: "NO"
+
+  # Custom keyboard extension. RequestsOpenAccess = NO lives in its Info.plist.
+  CipherKeysKeyboard:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: CipherKeysKeyboard/Sources
+    dependencies:
+      - target: CipherCore
+        embed: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.xkabiir.cipherkeys.keyboard
+        INFOPLIST_FILE: CipherKeysKeyboard/Info.plist
+        CODE_SIGN_ENTITLEMENTS: CipherKeysKeyboard/CipherKeysKeyboard.entitlements
+        GENERATE_INFOPLIST_FILE: "NO"
+
+  # "Decode with CipherKeys" action extension — decode text you can't edit (received
+  # messages, web pages, PDFs) via the system Share sheet.
+  CipherKeysAction:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: CipherKeysAction/Sources
+      - path: CipherKeysAction/Resources
+    dependencies:
+      - target: CipherCore
+        embed: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.xkabiir.cipherkeys.action
+        INFOPLIST_FILE: CipherKeysAction/Info.plist
+        CODE_SIGN_ENTITLEMENTS: CipherKeysAction/CipherKeysAction.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: "NO"
+
+schemes:
+
+  CipherCore:
+    build:
+      targets:
+        CipherCore: all
+        CipherCoreTests: [test]
+    test:
+      targets:
+        - CipherCoreTests
+
+  CipherKeys:
+    build:
+      targets:
+        CipherKeys: all
+        CipherKeysKeyboard: all
+        CipherKeysAction: all
+    run:
+      config: Debug
