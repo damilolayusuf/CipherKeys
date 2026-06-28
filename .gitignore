@@ -1,0 +1,23 @@
+# Xcode / build artifacts
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# The Xcode project is GENERATED from project.yml by XcodeGen.
+# Run `xcodegen generate` to recreate it. Keep it out of version control so the
+# project.yml stays the single source of truth.
+CipherKeys.xcodeproj/
+
+# macOS
+.DS_Store
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Carthage / CocoaPods (unused, but ignored defensively)
+Carthage/Build/
+Pods/
