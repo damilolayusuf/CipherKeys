@@ -1,0 +1,1 @@
+secret,code,decoder,encode,decode,ROT13,caesar,atbash,T9,keyboard,scramble,puzzle,spy,cryptogram

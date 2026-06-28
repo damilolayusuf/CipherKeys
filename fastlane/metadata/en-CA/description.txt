@@ -1,0 +1,25 @@
+CipherKeys turns any message into a secret code, right from your keyboard.
+
+Type normally, switch to the CipherKeys keyboard, and tap Encode — your text is instantly scrambled with a classic cipher. Tap Decode to bring it back. It works in Messages, Notes, and almost any app with a text field.
+
+CLASSIC CIPHERS
+• Caesar — shift the alphabet by any amount
+• ROT13 — the internet's favorite spoiler-hider
+• Atbash — mirror the alphabet (A↔Z)
+• T9 — old-school phone keypad multitap
+
+BUILD YOUR OWN
+Chain steps together — Caesar, Reverse, Vigenère and more — into your own custom cipher "recipe." Name it, save it, and use it like any other cipher.
+
+SHARE THE SECRET
+Send a friend your recipe as a link or QR code. They tap it, and now you both speak the same code. Decode messages you receive with the built-in decoder box or the "Decode with CipherKeys" share action — no copy-paste gymnastics.
+
+PRIVATE BY DESIGN
+• No accounts, no ads, no tracking
+• No internet connection — everything happens on your device
+• The keyboard needs NO "Full Access"
+
+JUST FOR FUN
+These are classic, centuries-old ciphers. They're a blast for passing notes, hiding spoilers, and feeling like a secret agent — but they are NOT encryption and offer no real security. Anyone with your recipe can read the message, so please don't use CipherKeys for anything that needs to stay truly private.
+
+Decode the world. Have fun.
