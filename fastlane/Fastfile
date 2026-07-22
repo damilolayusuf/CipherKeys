@@ -34,4 +34,36 @@ platform :ios do
       force: true # skip the HTML preview confirmation
     )
   end
+
+  desc "Capture App Store screenshots in the simulator (no upload)"
+  lane :screenshots do
+    capture_ios_screenshots(
+      scheme: "CipherKeys",
+      devices: [
+        "iPhone 16 Pro Max",     # 6.9" iPhone
+        "iPad Pro 13-inch (M4)"  # 13" iPad (drop if you make the app iPhone-only)
+      ],
+      languages: ["en-CA"],
+      output_directory: "./fastlane/screenshots",
+      clear_previous_screenshots: true,
+      override_status_bar: true, # clean 9:41 / full battery status bar
+      concurrent_simulators: true,
+      stop_after_first_error: true
+    )
+  end
+
+  desc "Capture screenshots and upload them to App Store Connect"
+  lane :screenshots_upload do
+    screenshots
+    deliver(
+      api_key: asc_api_key,
+      app_identifier: "com.xkabiir.cipherkeys",
+      skip_binary_upload: true,
+      skip_metadata: true,
+      overwrite_screenshots: true,
+      run_precheck_before_submit: false,
+      submit_for_review: false,
+      force: true
+    )
+  end
 end
